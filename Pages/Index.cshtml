@@ -1,0 +1,48 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Marvell Book Store";
+}
+
+<div class="row">
+    @foreach (var book in Model.Books)
+    {
+        <div class="col-3">
+            <div class="card">
+                <img src="~/@(!string.IsNullOrEmpty(book.CoverUrl) ? book.CoverUrl : "img/book-cover.png")" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">@book.Name</h5>
+                    <h6 class="card-subtitle">@book.PublishDate.ToString("MMMM yyyy")</h6>
+                </div>
+                <div class="card-footer">
+                    <a asp-page="Edit" asp-route-id="@book.Id" class="btn btn-primary">Edit</a>
+                    <button class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@* <table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.Books[0].Name)</th>
+            <th>@Html.DisplayNameFor(m => m.Books[0].Author)</th>
+            <th>@Html.DisplayNameFor(m => m.Books[0].PublishDate)</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model.Books)
+        {
+            <tr>
+                <td>@book.Name</td>
+                <td>@book.Author</td>
+                <td>@book.PublishDate.ToString("MMMM yyyy")</td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@book.Id" class="btn btn-primary btn-sm">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table> *@
