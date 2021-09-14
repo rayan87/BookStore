@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookStore.Data;
+using BookStore.Infrastructure.Pagination;
 
 namespace BookStore.Infrastructure
 {
     public interface IBookRepository
     {
         Task<List<Book>> GetAll();
+
+        Task<PagedData<Book>> GetList(int start, int limit);
 
         ValueTask<Book> GetById(int id);
 

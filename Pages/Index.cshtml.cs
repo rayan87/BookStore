@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BookStore.Infrastructure;
 using BookStore.Models;
+using BookStore.Models.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -28,9 +29,28 @@ namespace BookStore.Pages
 
         public async Task OnGetAsync()
         {
-            Books = _mapper.Map<List<BookModel>>(await _bookRepository.GetAll());
+            // int limit = PageSize ?? 4;
+            // int start = ((PageNo ?? 1) - 1) * limit; 
+
+            var data = await _bookRepository.GetList(Pager.Start, Pager.Limit);
+            Pager.TotalRecordsCount = data.TotalRecordsCount;
+            
+            Books = _mapper.Map<List<BookModel>>(data.Items);
         }
 
         public List<BookModel> Books {get;set;}
+
+        // public int TotalPagesCount {get;set;}
+
+        // public int TotalRecordsCount {get;set;}
+
+        [BindProperty(SupportsGet = true)]
+        public DataPager Pager {get;set;} = new DataPager();
+
+        // [BindProperty(SupportsGet = true, Name = "p")]
+        // public int? PageNo {get;set;}
+
+        // [BindProperty(SupportsGet = true)]
+        // public int? PageSize {get;set;}
     }
 }

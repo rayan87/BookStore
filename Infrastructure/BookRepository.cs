@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BookStore.Data;
 using Microsoft.EntityFrameworkCore;
+using BookStore.Infrastructure.Pagination;
 
 namespace BookStore.Infrastructure
 {
@@ -27,6 +29,31 @@ namespace BookStore.Infrastructure
             return _dbContext.Books
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+
+        public async Task<PagedData<Book>> GetList(int start, int limit)
+        {
+            var query = _dbContext.Books.AsQueryable()
+                    .AsNoTracking()
+                    .OrderByDescending(x => x.Id);
+
+            return new PagedData<Book>()
+            {
+                TotalRecordsCount = await query.CountAsync(),
+                Items = await query.Skip(start).Take(limit).ToListAsync()
+            };
+            //return new PagedData<Book>(query, start, limit);
+            // var data = new PagedData<Book>();
+            // data.TotalCount = await query.CountAsync();
+
+            // data.Items = await query
+            //     .OrderByDescending(x => x.Id)
+            //     .Skip(start)
+            //     .Take(limit)
+            //     .ToListAsync();
+
+            // return data;
         }
 
         public ValueTask<Book> GetById(int id)
