@@ -32,7 +32,7 @@ namespace BookStore.Infrastructure
         }
 
 
-        public async Task<PagedData<Book>> GetList(int start, int limit, string keywords)
+        public Task<PagedData<Book>> GetList(int pageNumber, int pageSize, string keywords)
         {
             var query = _dbContext.Books.AsQueryable()
                     .AsNoTracking();
@@ -42,11 +42,12 @@ namespace BookStore.Infrastructure
 
             query = query.OrderByDescending(x => x.Id);
 
-            return new PagedData<Book>()
-            {
-                TotalRecordsCount = await query.CountAsync(),
-                Items = await query.Skip(start).Take(limit).ToListAsync()
-            };
+            return query.ToPagedDataAsync(pageNumber, pageSize)
+            // return new PagedData<Book>()
+            // {
+            //     TotalRecordsCount = await query.CountAsync(),
+            //     Items = await query.Skip(start).Take(limit).ToListAsync()
+            // };
             
             //return new PagedData<Book>(query, start, limit);
             // var data = new PagedData<Book>();
