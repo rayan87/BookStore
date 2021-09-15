@@ -25,29 +25,23 @@
 <div class="text-center">
     <nav aria-label="...">
         <ul class="pagination">
-            @* <li class="page-item disabled">
-                <span class="page-link">Prev</span>
-            </li>
-                *@
-            @for (int i = 1; i <= Model.Pager.TotalPagesCount; i++)
-            {
-                string queryString = string.Join('&', Request.Query.Where(x => x.Key != "page" || x.Key != "page_size"));
-                if (string.IsNullOrEmpty(queryString))
-                    queryString += "?";
-                else
-                    queryString += "&";
-                
-                if (i > 1)
-                    queryString += $"page={i}&";
+            @{
+                string url = Request.Path + "?" + string.Join("", Request
+                    .Query
+                    .Where(x => x.Key != "page" && x.Key != "page_size")
+                    .Select(x => $"{x.Key}={x.Value}&"));
 
                 if (Model.Pager.PageSize.HasValue)
-                    queryString += $"page_size={Model.Pager.PageSize.Value}&";
-
-                queryString = queryString.Remove(queryString.Length - 1, 1);
+                    url += $"page_size={Model.Pager.PageSize.Value}&";
+            }
+            
+            @for (int i = 1; i <= Model.Pager.TotalPagesCount; i++)
+            {
+                string pageUrl = url + (i > 1 ? $"page={i}&" : "");
 
                 <li class="page-item">
                     <a class="page-link" 
-                        href="@Url.PageLink()@Html.Raw(queryString)">
+                        href="@pageUrl.Remove(pageUrl.Length - 1, 1)">
                     @i</a>
                 </li>
             }

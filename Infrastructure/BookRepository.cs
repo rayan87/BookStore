@@ -32,17 +32,22 @@ namespace BookStore.Infrastructure
         }
 
 
-        public async Task<PagedData<Book>> GetList(int start, int limit)
+        public async Task<PagedData<Book>> GetList(int start, int limit, string keywords)
         {
             var query = _dbContext.Books.AsQueryable()
-                    .AsNoTracking()
-                    .OrderByDescending(x => x.Id);
+                    .AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(keywords))
+                query = query.Where(x => x.Name.ToLower().Contains(keywords.ToLower()) || x.Author.Contains(keywords.ToLower()));
+
+            query = query.OrderByDescending(x => x.Id);
 
             return new PagedData<Book>()
             {
                 TotalRecordsCount = await query.CountAsync(),
                 Items = await query.Skip(start).Take(limit).ToListAsync()
             };
+            
             //return new PagedData<Book>(query, start, limit);
             // var data = new PagedData<Book>();
             // data.TotalCount = await query.CountAsync();

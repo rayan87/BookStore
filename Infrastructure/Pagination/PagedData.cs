@@ -17,5 +17,7 @@ namespace BookStore.Infrastructure.Pagination
         public IList<T> Items {get;set;}
 
         public int TotalRecordsCount {get;set;}
+
+        
     }
 }

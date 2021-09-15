@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -32,7 +33,7 @@ namespace BookStore.Pages
             // int limit = PageSize ?? 4;
             // int start = ((PageNo ?? 1) - 1) * limit; 
 
-            var data = await _bookRepository.GetList(Pager.Start, Pager.Limit);
+            var data = await _bookRepository.GetList(Pager.Start, Pager.Limit, SearchKeywords);
             Pager.TotalRecordsCount = data.TotalRecordsCount;
             
             Books = _mapper.Map<List<BookModel>>(data.Items);
@@ -46,6 +47,9 @@ namespace BookStore.Pages
 
         [BindProperty(SupportsGet = true)]
         public DataPager Pager {get;set;} = new DataPager();
+
+        [BindProperty(SupportsGet = true, Name = "q")]
+        public string SearchKeywords {get;set;}
 
         // [BindProperty(SupportsGet = true, Name = "p")]
         // public int? PageNo {get;set;}

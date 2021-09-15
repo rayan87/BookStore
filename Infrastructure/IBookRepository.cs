@@ -9,7 +9,7 @@ namespace BookStore.Infrastructure
     {
         Task<List<Book>> GetAll();
 
-        Task<PagedData<Book>> GetList(int start, int limit);
+        Task<PagedData<Book>> GetList(int start, int limit, string keywords = null);
 
         ValueTask<Book> GetById(int id);
 
